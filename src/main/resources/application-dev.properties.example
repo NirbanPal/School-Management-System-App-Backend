@@ -1,0 +1,33 @@
+# Server port
+server.port=
+
+# PostgreSQL Database Configuration
+spring.datasource.url=
+spring.datasource.driverClassName=
+spring.datasource.username=
+spring.datasource.password=
+
+
+# JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=update
+
+# JWT Configuration
+jwt.secret-key=
+jwt.expiration=
+#jwt.header=Authorization
+#jwt.prefix=Bearer
+
+# Redis Configuration
+spring.data.redis.host=
+spring.data.redis.port=
+spring.data.redis.timeout=
+
+# Email Configuration
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+

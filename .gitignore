@@ -1,0 +1,61 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Local environment files
+application-dev.properties
+application-prod.properties
+
+
+# Windows system files
+Thumbs.db
+
+# Log files
+*.log
+logs/
+*.out
+
+# Security / credential-related files
+*.jks
+*.p12
+*.pem
+*.crt
+*.key
+
+# Backup or temporary files
+*.bak
+*.swp
+*~
+
+
+# Test output
+/test-output/
+
+
