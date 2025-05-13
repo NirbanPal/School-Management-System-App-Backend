@@ -1,6 +1,6 @@
 package com.example.SMSApp.dto;
 
-import com.example.SMSApp.model.Role;
+import com.example.SMSApp.model.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

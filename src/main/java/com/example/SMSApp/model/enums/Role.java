@@ -1,4 +1,4 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.model.enums;
 
 
 public enum Role {

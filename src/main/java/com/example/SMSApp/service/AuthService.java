@@ -12,9 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.SMSApp.model.AppUser;
-import com.example.SMSApp.model.Role;
+import com.example.SMSApp.model.enums.Role;
 
-import java.net.NetworkInterface;
 
 
 @Service

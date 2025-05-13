@@ -1,7 +1,7 @@
 package com.example.SMSApp.service;
 
 import com.example.SMSApp.model.AppUser;
-import com.example.SMSApp.model.Role;
+import com.example.SMSApp.model.enums.Role;
 import com.example.SMSApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
