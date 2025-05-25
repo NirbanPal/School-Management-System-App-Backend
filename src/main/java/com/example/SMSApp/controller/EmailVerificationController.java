@@ -1,8 +1,8 @@
 package com.example.SMSApp.controller;
 
 
-import com.example.SMSApp.dto.OtpRequestDto;
-import com.example.SMSApp.dto.OtpVerifyDto;
+import com.example.SMSApp.dto.request.OtpRequestDto;
+import com.example.SMSApp.dto.request.OtpVerifyDto;
 import com.example.SMSApp.service.EmailService;
 import com.example.SMSApp.service.OtpService;
 import com.example.SMSApp.service.RateLimitingService;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class EmailVerificationController {
     private final OtpService otpService;
@@ -32,7 +32,6 @@ public class EmailVerificationController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                     .body("IP limit exceeded. Try again after 1 hour.");
         }
-        System.out.println("Running");
 
         if (!otpService.canSendOtp(email.getEmail())) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)

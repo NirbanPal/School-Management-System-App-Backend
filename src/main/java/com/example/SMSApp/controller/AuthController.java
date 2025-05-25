@@ -1,7 +1,7 @@
 package com.example.SMSApp.controller;
 
-import com.example.SMSApp.dto.AuthRequest;
-import com.example.SMSApp.dto.AuthResponse;
+import com.example.SMSApp.dto.request.AuthRequest;
+import com.example.SMSApp.dto.response.AuthResponse;
 import com.example.SMSApp.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -26,5 +26,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid AuthRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
+    }
+
+    @PostMapping("/forget-password")
+    public ResponseEntity<?> forgetPassword(@RequestBody @Valid AuthRequest request){
+        return ResponseEntity.ok(authService.forgetPasswordService(request));
     }
 }
