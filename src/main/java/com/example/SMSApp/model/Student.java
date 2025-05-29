@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "student")
@@ -13,9 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Student extends BaseEntity {
-
 
     @Column(nullable = false)
     private String name;
@@ -33,12 +32,12 @@ public class Student extends BaseEntity {
     private String address;
 
     @Column(nullable = false)
-    private String img;
+    private String profileImg;
 
     @Column(nullable = false, length = 3)
     private String bloodType;
 
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserSex sex;
 
@@ -46,10 +45,13 @@ public class Student extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @Column(length = 10)
+    @Column(length = 10,unique = true)
     private String rollNumber;
 
     private Boolean adminApproval;
+
+    @Column(nullable = false)
+    private String idProofImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

@@ -1,4 +1,4 @@
 package com.example.SMSApp.service;
 
-public interface FileStorageService {
+public interface ExamService {
 }

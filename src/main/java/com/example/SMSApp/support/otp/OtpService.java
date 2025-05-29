@@ -1,8 +1,7 @@
-package com.example.SMSApp.service.Impl;
+package com.example.SMSApp.support.otp;
 
 
 import com.example.SMSApp.dto.OtpSessionDto;
-import com.example.SMSApp.service.OtpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -16,14 +15,13 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class OtpServiceImpl implements OtpService {
+public class OtpService {
     private final RedisTemplate<String, OtpSessionDto> otpRedisTemplate;
     private final RedisTemplate<String, String> stringRedisTemplate;
 
     private static final Duration OTP_VALIDITY = Duration.ofMinutes(2);
     private static final Duration HOURLY_LIMIT_WINDOW = Duration.ofHours(1);
 
-    @Override
     public boolean canSendOtp(String email) {
         ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
         String otpKey = "otp-session:" + email;
@@ -40,7 +38,6 @@ public class OtpServiceImpl implements OtpService {
         return true;
     }
 
-    @Override
     public void storeOtp(String email, String rawOtp) {
 
         if(otpRedisTemplate.opsForValue().get("otp-session:" + email)!=null)
@@ -55,7 +52,7 @@ public class OtpServiceImpl implements OtpService {
         otpRedisTemplate.opsForValue().set("otp-session:" + email, otpSession, OTP_VALIDITY);
     }
 
-    @Override
+
     public boolean verifyOtp(String email, String otp) {
         OtpSessionDto session = otpRedisTemplate.opsForValue().get("otp-session:" + email);
         if (session == null) return false;
@@ -68,20 +65,20 @@ public class OtpServiceImpl implements OtpService {
         return match;
     }
 
-    @Override
+
     public boolean isEmailVerified(String email) {
         OtpSessionDto session = otpRedisTemplate.opsForValue().get("otp-session:" + email);
         return session != null && session.isValid();
     }
 
-    @Override
+
     public void deleteOtp(String email) {
         otpRedisTemplate.delete("otp-session:" + email);
     }
 
 
 
-    private static String hashOtp(String otp) {
+    private String hashOtp(String otp) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encoded = digest.digest(otp.getBytes(StandardCharsets.UTF_8));
@@ -98,3 +95,4 @@ public class OtpServiceImpl implements OtpService {
     }
 
 }
+

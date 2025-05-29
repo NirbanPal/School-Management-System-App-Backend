@@ -3,9 +3,9 @@ package com.example.SMSApp.controller;
 
 import com.example.SMSApp.dto.request.OtpRequestDto;
 import com.example.SMSApp.dto.request.OtpVerifyDto;
-import com.example.SMSApp.service.EmailService;
-import com.example.SMSApp.service.OtpService;
-import com.example.SMSApp.service.RateLimitingService;
+import com.example.SMSApp.support.email.EmailService;
+import com.example.SMSApp.support.otp.OtpService;
+import com.example.SMSApp.support.ratelimit.RateLimitingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

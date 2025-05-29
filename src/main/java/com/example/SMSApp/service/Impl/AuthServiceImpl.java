@@ -7,7 +7,7 @@ import com.example.SMSApp.model.AppUser;
 import com.example.SMSApp.model.enums.Role;
 import com.example.SMSApp.repository.UserRepository;
 import com.example.SMSApp.security.JwtService;
-import com.example.SMSApp.service.OtpService;
+import com.example.SMSApp.support.otp.OtpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;

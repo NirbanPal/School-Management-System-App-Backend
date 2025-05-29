@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ClassEntity extends BaseEntity {
 
     @Column(nullable = false, unique = true)
@@ -21,8 +20,12 @@ public class ClassEntity extends BaseEntity {
     private Integer capacity;
 
     // Optional supervisor (teacher)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "teacher_id")
+//    private Teacher supervisor;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supervisor_id")
+    @JoinColumn(name = "teacher_id")
     private Teacher supervisor;
 
     // Grade to which this class belongs

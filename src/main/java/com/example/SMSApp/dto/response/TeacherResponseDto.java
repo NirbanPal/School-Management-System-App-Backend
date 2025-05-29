@@ -1,4 +1,4 @@
-package com.example.SMSApp.dto;
+package com.example.SMSApp.dto.response;
 
 import com.example.SMSApp.model.enums.UserSex;
 import lombok.*;
@@ -11,11 +11,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TeacherDto {
+public class TeacherResponseDto {
     private UUID publicId;
     private String name;
     private String surname;
-    private String email;
     private String phone;
     private String address;
     private String bloodType;

@@ -19,7 +19,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AppUser>> getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll());
     }

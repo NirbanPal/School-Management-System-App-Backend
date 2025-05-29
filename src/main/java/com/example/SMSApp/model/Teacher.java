@@ -4,6 +4,7 @@ import com.example.SMSApp.model.enums.UserSex;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -14,41 +15,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Teacher extends BaseEntity{
 
-    @Column(nullable = false)
-    private String name;
+    @Embedded
+    private PersonInfo personInfo;
 
-    @Column(nullable = false)
-    private String surname;
-
-    @Column(unique = true)
-    private String email;
-
-    @Column(unique = true, nullable = false, length = 10)
-    private String phone;
-
-    @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private String profileImg;
-
-    @Column(nullable = false, length = 3)
-    private String bloodType;
-
-//    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserSex sex;
-
-    @Column(nullable = false)
-    private LocalDateTime birthday;
-
-    @Column(length = 10)
+    @Column(length = 10,unique = true)
     private String empId;
-
-    private Boolean adminApproval;
 
     @Column(nullable = false)
     private Boolean availabilityStatus;
@@ -56,14 +29,17 @@ public class Teacher extends BaseEntity{
     @Column(nullable = false)
     private String qualification;
 
+    @Column(nullable = false, unique = true)
+    private String cvFileName;
+
     @Column(nullable = false)
-    private String cv;
+    private String cvFileType;
+
+    @Column(nullable = false, unique = true)
+    private String cvFilePath;
 
     @Column(nullable = false)
     private Integer experience;
-
-    @Column(nullable = false)
-    private String idProofImage;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_user_id",  referencedColumnName = "id")

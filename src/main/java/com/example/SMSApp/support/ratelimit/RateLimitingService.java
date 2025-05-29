@@ -1,6 +1,5 @@
-package com.example.SMSApp.service.Impl;
+package com.example.SMSApp.support.ratelimit;
 
-import com.example.SMSApp.service.RateLimitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -10,12 +9,11 @@ import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
-public class RateLimitingServiceImpl implements RateLimitingService {
+public class RateLimitingService {
     private final RedisTemplate<String, String> redisTemplate;
     private static final int MAX_REQUESTS_PER_IP = 10;
     private static final Duration IP_RATE_LIMIT_DURATION = Duration.ofHours(1);
 
-    @Override
     public boolean isAllowedIp(String ip) {
         String key = "rate-limit:" + ip;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();

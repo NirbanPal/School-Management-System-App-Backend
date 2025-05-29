@@ -3,12 +3,14 @@ package com.example.SMSApp.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class BaseEntity {
@@ -26,6 +28,10 @@ public abstract class BaseEntity {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // Timestamp for update date,
+    @UpdateTimestamp
+    private LocalDateTime updatedDate;
 
     // Set default values before persisting to the database
     @PrePersist
