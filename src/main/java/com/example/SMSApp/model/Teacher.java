@@ -20,6 +20,9 @@ public class Teacher extends BaseEntity{
     @Embedded
     private PersonInfo personInfo;
 
+    @Column(unique = true, nullable = false, length = 10)
+    private String phone;
+
     @Column(length = 10,unique = true)
     private String empId;
 

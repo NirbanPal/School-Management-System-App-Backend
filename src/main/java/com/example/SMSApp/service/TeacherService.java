@@ -11,6 +11,8 @@ public interface TeacherService {
 
     List<TeacherResponseDto> getAllTeachers();
 
+    TeacherResponseDto getTeacherById(UUID publicId);
+
     TeacherResponseDto createTeacher(TeacherRequestDto teacherRequestDto, MultipartFile cv, MultipartFile idFile, MultipartFile profilePic);
 
     TeacherResponseDto updateTeacher(UUID id, TeacherRequestDto dto, MultipartFile cv, MultipartFile idFile, MultipartFile profilePic);

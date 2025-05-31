@@ -47,7 +47,6 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file, String subFolder) {
 
-//        String fileExtension = getFileExtension(file);
         String newFileName = UUID.randomUUID()+getCleanFileName(file);
 
         try {

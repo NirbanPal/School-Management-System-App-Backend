@@ -23,12 +23,12 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping
-    public ResponseEntity<List<TeacherResponseDto>> getAll() {
+    public ResponseEntity<List<TeacherResponseDto>> getAllTeachers() {
         return ResponseEntity.ok(teacherService.getAllTeachers());
     }
 
     @PostMapping
-    public ResponseEntity<TeacherResponseDto> create(@RequestPart("data") @Valid TeacherRequestDto teacherRequestDto,
+    public ResponseEntity<TeacherResponseDto> createTeacher(@RequestPart("data") @Valid TeacherRequestDto teacherRequestDto,
                                                      @RequestPart("cv") MultipartFile cv,
                                                      @RequestPart("idFile") MultipartFile idFile,
                                                      @RequestPart("profilePic") MultipartFile profilePic) {
@@ -47,20 +47,26 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.updateTeacher(id, dto, cv, idFile, profilePic));
     }
 
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TeacherResponseDto> getTeacher(@PathVariable UUID id) {
+        return ResponseEntity.ok(teacherService.getTeacherById(id));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteTeacher(@PathVariable UUID id) {
         teacherService.deleteTeacher(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/approve")
-    public ResponseEntity<String> approve(@PathVariable UUID id) {
+    public ResponseEntity<String> approveTeacher(@PathVariable UUID id) {
         teacherService.approveTeacherRegistration(id);
         return ResponseEntity.ok("Approved successfully and emp generated. ");
     }
 
     @DeleteMapping("/{id}/registration")
-    public ResponseEntity<Void> deleteRegistration(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteTeacherRegistration(@PathVariable UUID id) {
         teacherService.deleteTeacherRegistration(id);
         return ResponseEntity.noContent().build();
     }

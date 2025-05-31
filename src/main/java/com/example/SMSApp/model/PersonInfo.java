@@ -23,8 +23,8 @@ public class PersonInfo {
 //    @Column(unique = true, nullable = false)
 //    private String email;
 
-    @Column(unique = true, nullable = false, length = 10)
-    private String phone;
+//    @Column(unique = true, nullable = false, length = 10)
+//    private String phone;
 
     @Column(nullable = false)
     private String address;

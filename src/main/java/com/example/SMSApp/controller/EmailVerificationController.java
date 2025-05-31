@@ -42,7 +42,7 @@ public class EmailVerificationController {
         otpService.storeOtp(email.getEmail(), otp);
 
         // Sending OTP to mail
-        emailService.sendEmail(email.getEmail(),"OTP Verification From SMS APP",otp);
+        emailService.sendEmail(email.getEmail(),"OTP Verification From SMS APP","Your OTP is"+otp);
 
 
         return ResponseEntity.ok("If your mail is valid. OTP sent successfully. "+ otp);

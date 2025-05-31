@@ -18,7 +18,7 @@ public class TeacherMapper {
                 .publicId(teacher.getPublicId())
                 .name(info.getName())
                 .surname(info.getSurname())
-                .phone(info.getPhone())
+                .phone(teacher.getPhone())
                 .address(info.getAddress())
                 .bloodType(info.getBloodType())
                 .sex(info.getSex())
@@ -50,7 +50,6 @@ public class TeacherMapper {
 
         personInfo.setName(dto.getName());
         personInfo.setSurname(dto.getSurname());
-        personInfo.setPhone(dto.getPhone());
         personInfo.setAddress(dto.getAddress());
         personInfo.setSex(dto.getSex());
         personInfo.setBloodType(dto.getBloodType());
@@ -58,6 +57,7 @@ public class TeacherMapper {
 
 //        teacher.setPublicId(dto.getPublicId()); // if needed
         teacher.setPersonInfo(personInfo);
+        teacher.setPhone(dto.getPhone());
 //        teacher.setEmpId(dto.getEmpId());
         teacher.setQualification(dto.getQualification());
         teacher.setExperience(dto.getExperience());

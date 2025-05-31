@@ -16,42 +16,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Student extends BaseEntity {
 
-    @Column(nullable = false)
-    private String name;
 
-    @Column(nullable = false)
-    private String surname;
+//    @Column(unique = true, nullable = true)
+//    private String email;
 
-    @Column(unique = true, nullable = true)
-    private String email;
-
-    @Column(unique = true, nullable = true, length = 10)
-    private String phone;
-
-    @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private String profileImg;
-
-    @Column(nullable = false, length = 3)
-    private String bloodType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserSex sex;
-
-
-    @Column(nullable = false)
-    private LocalDate birthday;
+    @Embedded
+    private PersonInfo personInfo;
 
     @Column(length = 10,unique = true)
     private String rollNumber;
-
-    private Boolean adminApproval;
-
-    @Column(nullable = false)
-    private String idProofImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

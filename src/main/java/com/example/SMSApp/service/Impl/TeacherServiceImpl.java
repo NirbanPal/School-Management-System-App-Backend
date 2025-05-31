@@ -48,6 +48,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public TeacherResponseDto getTeacherById(UUID publicId){
+        Teacher teacher = teacherRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher does not found"));
+        return TeacherMapper.toTeacherDto(teacher);
+    }
+
+    @Override
     public TeacherResponseDto createTeacher(TeacherRequestDto teacherRequestDto, MultipartFile cv, MultipartFile idFile, MultipartFile profilePic) {
         // Validate and fetch AppUser
 
@@ -156,12 +163,18 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional
     public void deleteTeacher(UUID publicId) {
         Teacher teacher = teacherRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + publicId));
         AppUser deleteAppUser=teacher.getAppUser();
+        if(deleteAppUser!=null){
+            teacher.setAppUser(null);
+        }
         teacherRepository.delete(teacher);
-        userRepository.delete(deleteAppUser);
+        if (deleteAppUser != null) {
+            userRepository.delete(deleteAppUser);
+        }
     }
 
     @Override
