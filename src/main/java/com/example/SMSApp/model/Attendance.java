@@ -1,26 +1,22 @@
 package com.example.SMSApp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "attendance")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Attendance {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Attendance extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(nullable = false)
-    private LocalDateTime date;
+    @EqualsAndHashCode.Include
+    private UUID publicId;  // inherited from BaseEntity, but explicitly included
 
     @Column(nullable = false)
     private Boolean present;

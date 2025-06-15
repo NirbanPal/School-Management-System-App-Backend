@@ -5,8 +5,11 @@ import com.example.SMSApp.dto.response.TeacherResponseDto;
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import com.example.SMSApp.mapper.TeacherMapper;
 import com.example.SMSApp.model.AppUser;
+import com.example.SMSApp.model.PersonInfo;
+import com.example.SMSApp.model.Subject;
 import com.example.SMSApp.model.Teacher;
 import com.example.SMSApp.model.enums.Role;
+import com.example.SMSApp.repository.SubjectRepository;
 import com.example.SMSApp.repository.TeacherRepository;
 import com.example.SMSApp.repository.UserRepository;
 import com.example.SMSApp.support.storage.FileStorageService;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +41,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final UserRepository userRepository;
 
     private final CustomIdGeneratorService customIdGeneratorService;
+
+    private final SubjectRepository subjectRepository;
 
     @Override
     public List<TeacherResponseDto> getAllTeachers() {
@@ -63,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         // Role check
         if (appUser.getRole() != Role.TEACHER) {
-            throw new IllegalStateException("AppUser does not have TEACHER role.");
+            throw new IllegalStateException("AppUser does not have TEACHER role. Teacher is not authenticated");
         }
 
         // Prevent duplicate mapping
@@ -79,9 +85,9 @@ public class TeacherServiceImpl implements TeacherService {
 
         log.info("Here coming");
         // Store files
-        String cvPath = fileStorageService.storeFile(cv, "cv");
-        String idFilePath = fileStorageService.storeFile(idFile, "idproof");
-        String profilePicPath = fileStorageService.storeFile(profilePic, "profile");
+        String cvPath = fileStorageService.storeFile(cv, "cv",appUser.getPublicId());
+        String idFilePath = fileStorageService.storeFile(idFile, "idproof",appUser.getPublicId());
+        String profilePicPath = fileStorageService.storeFile(profilePic, "profile",appUser.getPublicId());
 
         // --- Extract file names and types from MultipartFile ---
         String idFileName = fileStorageService.getCleanFileName(idFile);
@@ -129,7 +135,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         if (cv != null && !cv.isEmpty()) {
             FileValidator.validateFile(cv, List.of("application/pdf"),1024 * 1024, "CV");
-            String cvPath = fileStorageService.storeFile(cv, "cv");
+            String cvPath = fileStorageService.storeFile(cv, "cv",teacher.getAppUser().getPublicId());
             String cvFileName = fileStorageService.getCleanFileName(cv);
             String cvFileType = fileStorageService.getFileExtension(cv);
             teacherObj.setCvFileName(cvFileName);
@@ -139,7 +145,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         if (idFile != null && !idFile.isEmpty()) {
             FileValidator.validateFile(idFile, List.of("application/pdf", "image/jpeg", "image/png"),1024 * 1024, "ID Proof");
-            String idPath = fileStorageService.storeFile(idFile, "idproof");
+            String idPath = fileStorageService.storeFile(idFile, "idproof",teacher.getAppUser().getPublicId());
             String idFileName = fileStorageService.getCleanFileName(idFile);
             String idFileType = fileStorageService.getFileExtension(idFile);
             teacherObj.getPersonInfo().setIdFileName(idFileName);
@@ -149,12 +155,23 @@ public class TeacherServiceImpl implements TeacherService {
 
         if (profilePic != null && !profilePic.isEmpty()) {
             FileValidator.validateFile(profilePic, List.of("image/jpeg", "image/png", "image/jpg"),1024 * 1024, "Profile Pic");
-            String profilePicPath = fileStorageService.storeFile(profilePic, "profile");
+            String profilePicPath = fileStorageService.storeFile(profilePic, "profile",teacher.getAppUser().getPublicId());
             String profilePicFileName = fileStorageService.getCleanFileName(profilePic);
             String profilePicFileType = fileStorageService.getFileExtension(profilePic);
             teacherObj.getPersonInfo().setProfilePicFileName(profilePicFileName);
             teacherObj.getPersonInfo().setProfilePicFileType(profilePicFileType);
             teacherObj.getPersonInfo().setProfilePicFilePath(profilePicPath);
+        }
+
+
+        // Handle subject updates only if not null
+        if (teacherRequestDto.getSubjectIds() != null) {
+            teacherObj.clearSubjects();
+            for (UUID subjectId : teacherRequestDto.getSubjectIds()) {
+                Subject subject = subjectRepository.findByPublicId(subjectId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
+                teacherObj.addSubject(subject);
+            }
         }
 
         Teacher updated=teacherRepository.save(teacherObj);
@@ -167,6 +184,21 @@ public class TeacherServiceImpl implements TeacherService {
     public void deleteTeacher(UUID publicId) {
         Teacher teacher = teacherRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + publicId));
+
+        //Deleting Files
+        PersonInfo personInfo = teacher.getPersonInfo();
+        if (personInfo != null) {
+            if (personInfo.getProfilePicFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getProfilePicFilePath());
+            }
+            if (personInfo.getIdFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getIdFilePath());
+            }
+        }
+        if (teacher.getCvFilePath() != null) {
+            fileStorageService.deleteFile(teacher.getCvFilePath());
+        }
+
         AppUser deleteAppUser=teacher.getAppUser();
         if(deleteAppUser!=null){
             teacher.setAppUser(null);
@@ -201,6 +233,22 @@ public class TeacherServiceImpl implements TeacherService {
     public void deleteTeacherRegistration(UUID publicId) {
         Teacher teacher = teacherRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + publicId));
+
+        //Deleting Files
+        PersonInfo personInfo = teacher.getPersonInfo();
+        if (personInfo != null) {
+            if (personInfo.getProfilePicFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getProfilePicFilePath());
+            }
+            if (personInfo.getIdFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getIdFilePath());
+            }
+        }
+        if (teacher.getCvFilePath() != null) {
+            fileStorageService.deleteFile(teacher.getCvFilePath());
+        }
+
+
         teacherRepository.delete(teacher);
     }
 }

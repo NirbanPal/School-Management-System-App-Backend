@@ -3,8 +3,11 @@ package com.example.SMSApp.service.Impl;
 import com.example.SMSApp.dto.OtpSessionDto;
 import com.example.SMSApp.dto.request.AuthRequest;
 import com.example.SMSApp.dto.response.AuthResponse;
+import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import com.example.SMSApp.model.AppUser;
+import com.example.SMSApp.model.Student;
 import com.example.SMSApp.model.enums.Role;
+import com.example.SMSApp.repository.StudentRepository;
 import com.example.SMSApp.repository.UserRepository;
 import com.example.SMSApp.security.JwtService;
 import com.example.SMSApp.support.otp.OtpService;
@@ -22,6 +25,7 @@ import com.example.SMSApp.service.AuthService;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -88,7 +92,6 @@ public class AuthServiceImpl implements AuthService {
         String email=request.getEmail();
         AppUser user=userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Email is not registered. Please register."));
-
 
         if(!otpService.isEmailVerified(email))
             throw new RuntimeException("Email has not been validated.");

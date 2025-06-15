@@ -2,6 +2,7 @@ package com.example.SMSApp.exception;
 
 
 import com.example.SMSApp.dto.response.ApiErrorResponse;
+import com.example.SMSApp.exception.custom.BadRequestException;
 import com.example.SMSApp.exception.custom.FileValidationException;
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -116,6 +117,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<ApiErrorResponse> handleMissingRequestPart(MissingServletRequestPartException ex, HttpServletRequest request) {
+        ApiErrorResponse response = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadRequest(MissingServletRequestPartException ex, HttpServletRequest request) {
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())

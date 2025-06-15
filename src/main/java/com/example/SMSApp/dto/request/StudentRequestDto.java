@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @Getter
@@ -41,6 +42,9 @@ public class StudentRequestDto {
     @NotNull(message = "Birthday is required.")
     @Past(message = "Birthday must be a past date.")
     private LocalDate birthday;
+
+    @NotNull(message = "Class is required.")
+    private UUID classId;
 
 
 }

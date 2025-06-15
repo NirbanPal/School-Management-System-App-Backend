@@ -46,7 +46,7 @@ public class ParentRequestDto {
     @Past(message = "Birthday must be a past date.")
     private LocalDate birthday;
 
-    @NotBlank(message = "Relation is required.")
+    @NotNull(message = "Relation is required.")
     @Size(max = 20, message = "Relation must be at most 20 characters.")
     private String relation;
 

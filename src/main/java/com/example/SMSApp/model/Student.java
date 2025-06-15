@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "student")
@@ -14,8 +13,11 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Student extends BaseEntity {
 
+    @EqualsAndHashCode.Include
+    private UUID publicId;  // inherited from BaseEntity, but explicitly included
 
 //    @Column(unique = true, nullable = true)
 //    private String email;
@@ -34,20 +36,43 @@ public class Student extends BaseEntity {
     @JoinColumn(name = "class_id")
     private ClassEntity classEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_id")
-    private Grade grade;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "grade_id")
+//    private Grade grade;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Attendance> attendances;
+    private Set<Attendance> attendances= new HashSet<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Result> results;
+    private Set<Result> results= new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "app_user_id", referencedColumnName = "id")
     private AppUser appUser;
 
+    // =============================
+    // Bidirectional relationship helpers
+    // =============================
+
+    public void addAttendance(Attendance attendance) {
+        this.attendances.add(attendance);
+        attendance.setStudent(this);
+    }
+
+    public void removeAttendance(Attendance attendance) {
+        this.attendances.remove(attendance);
+        attendance.setStudent(null);
+    }
+
+    public void addResult(Result result) {
+        this.results.add(result);
+        result.setStudent(this);
+    }
+
+    public void removeResult(Result result) {
+        this.results.remove(result);
+        result.setStudent(null);
+    }
 
 }
 

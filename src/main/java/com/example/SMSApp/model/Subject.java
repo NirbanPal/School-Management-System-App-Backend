@@ -2,33 +2,44 @@ package com.example.SMSApp.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "subject")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subject {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Subject extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @EqualsAndHashCode.Include
+    private UUID publicId;  // inherited from BaseEntity, but explicitly included
 
     @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "subjects")
-    private Set<Teacher> teachers;
+    private Set<Teacher> teachers= new HashSet<>();
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lesson> lessons;
+    private Set<Lesson> lessons= new HashSet<>();
+
+    // =============================
+    // Bidirectional relationship helpers
+    // =============================
+
+    public void addLesson(Lesson lesson) {
+        this.lessons.add(lesson);
+        lesson.setSubject(this);
+    }
+
+    public void removeLesson(Lesson lesson) {
+        this.lessons.remove(lesson);
+        lesson.setSubject(null);
+    }
 
 
 }

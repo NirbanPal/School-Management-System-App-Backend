@@ -59,4 +59,10 @@ public class PersonInfo {
 
     @Column(nullable = false, unique = true)
     private String profilePicFilePath;
+
+    //Get full name
+    public String getFullName() {
+        return name + " " + surname;
+    }
+
 }

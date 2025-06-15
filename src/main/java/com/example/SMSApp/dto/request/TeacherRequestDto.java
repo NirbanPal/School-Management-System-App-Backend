@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -49,7 +51,7 @@ public class TeacherRequestDto {
 //    @Size(max = 10, message = "Employee ID must be at most 10 characters.")
 //    private String empId;
 
-//    @NotNull(message = "Availability status is required.")
+//    @NotBlank(message = "Availability status is required.")
 //    private Boolean availabilityStatus;
 
     @NotBlank(message = "Qualification is required.")
@@ -60,5 +62,10 @@ public class TeacherRequestDto {
     @Min(value = 0, message = "Experience cannot be negative.")
     @Max(value = 50, message = "Experience cannot exceed 50 years.")
     private Integer experience;
+
+    //Many to many
+//    @NotNull
+//    @Size(min = 1, message = "At least one subject must be assigned")
+    private Set<UUID> subjectIds;
 
 }

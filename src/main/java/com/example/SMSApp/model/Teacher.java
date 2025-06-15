@@ -6,8 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "teacher")
@@ -15,7 +14,11 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Teacher extends BaseEntity{
+
+    @EqualsAndHashCode.Include
+    private UUID publicId;  // inherited from BaseEntity, but explicitly included
 
     @Embedded
     private PersonInfo personInfo;
@@ -54,12 +57,56 @@ public class Teacher extends BaseEntity{
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    private Set<Subject> subjects;
+    private Set<Subject> subjects=new HashSet<>();
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lesson> lessons;
+    private Set<Lesson> lessons =new HashSet<>();
 
     @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClassEntity> supervisedClasses;
+    private Set<ClassEntity> supervisedClasses =new HashSet<>();
+
+
+    // =============================
+    // Bidirectional relationship helpers
+    // =============================
+
+
+    public void addLesson(Lesson lesson) {
+        this.lessons.add(lesson);
+        lesson.setTeacher(this);
+    }
+
+    public void removeLesson(Lesson lesson) {
+        this.lessons.remove(lesson);
+        lesson.setTeacher(null);
+    }
+
+    public void addSupervisedClass(ClassEntity classEntity) {
+        this.supervisedClasses.add(classEntity);
+        classEntity.setSupervisor(this);
+    }
+
+    public void removeSupervisedClass(ClassEntity classEntity) {
+        this.supervisedClasses.remove(classEntity);
+        classEntity.setSupervisor(null);
+    }
+
+    //For many to many
+
+    public void addSubject(Subject subject) {
+        this.subjects.add(subject);
+        subject.getTeachers().add(this);
+    }
+
+    public void removeSubject(Subject subject) {
+        this.subjects.remove(subject);
+        subject.getTeachers().remove(this);
+    }
+
+    public void clearSubjects() {
+        for (Subject subject : new HashSet<>(subjects)) {
+            removeSubject(subject);
+        }
+    }
 
 }

@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 
 @Service
@@ -45,9 +46,9 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file, String subFolder) {
+    public String storeFile(MultipartFile file, String subFolder, UUID fileId) {
 
-        String newFileName = UUID.randomUUID()+getCleanFileName(file);
+        String newFileName = fileId+getCleanFileName(file);
 
         try {
             Path targetLocation = Paths.get(baseUploadDir, subFolder).toAbsolutePath().normalize();
@@ -69,7 +70,46 @@ public class FileStorageService {
     }
 
     public String getCleanFileName(MultipartFile file) {
-        return UUID.randomUUID()+StringUtils.cleanPath(file.getOriginalFilename());
+        return StringUtils.cleanPath(file.getOriginalFilename());
+    }
+
+    // If you want to delete all the file related to that UUID
+    public void deleteFilesByUuid(UUID pid) {
+        if (pid == null) {
+            throw new IllegalArgumentException("UUID cannot be null");
+        }
+        for (String subFolder : subFolders) {
+            Path directory = Paths.get(baseUploadDir, subFolder).toAbsolutePath().normalize();
+            try (Stream<Path> files = Files.list(directory)) {
+                files.filter(path -> {
+                    String filename = path.getFileName().toString();
+                    return filename.startsWith(pid.toString());
+                }).forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                        log.info("Deleted file: {}", path);
+                    } catch (IOException e) {
+                        log.error("Failed to delete file: {}", path, e);
+                    }
+                });
+            } catch (IOException e) {
+                log.error("Error accessing directory: {}", directory, e);
+            }
+        }
+    }
+
+    //If you want to delete a specific file.
+    public void deleteFile(String filePath) {
+        if (filePath == null || filePath.trim().isEmpty()) {
+            return;
+        }
+        try {
+            Path path = Paths.get(filePath).toAbsolutePath().normalize();
+            Files.deleteIfExists(path);
+            log.info("Deleted file: {}", path);
+        } catch (IOException e) {
+            log.error("Failed to delete file: {}", filePath, e);
+        }
     }
 
 }

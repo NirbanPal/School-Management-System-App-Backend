@@ -4,22 +4,18 @@ import com.example.SMSApp.dto.request.StudentRequestDto;
 import com.example.SMSApp.dto.response.StudentResponseDto;
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import com.example.SMSApp.mapper.StudentMapper;
-import com.example.SMSApp.mapper.StudentMapper;
-import com.example.SMSApp.mapper.StudentMapper;
-import com.example.SMSApp.mapper.StudentMapper;
 import com.example.SMSApp.model.*;
 import com.example.SMSApp.model.Student;
 import com.example.SMSApp.model.enums.Role;
-import com.example.SMSApp.repository.ParentRepository;
+import com.example.SMSApp.repository.*;
 import com.example.SMSApp.repository.StudentRepository;
-import com.example.SMSApp.repository.StudentRepository;
-import com.example.SMSApp.repository.UserRepository;
 import com.example.SMSApp.service.StudentService;
 import com.example.SMSApp.support.email.EmailService;
 import com.example.SMSApp.support.id.CustomIdGeneratorService;
 import com.example.SMSApp.support.storage.FileStorageService;
 import com.example.SMSApp.utils.FileValidator;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +45,8 @@ public class StudentServiceImpl implements StudentService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final ClassRepository classRepository;
+
     private EmailService emailService;
 
 
@@ -71,21 +69,27 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDto createStudent(StudentRequestDto studentRequestDto, MultipartFile idFile, MultipartFile profilePic) {
         // Validate and fetch AppUser
 
-        AppUser deleteAppUserParent = userRepository.findByEmail(studentRequestDto.getParentEmail())
+        AppUser appUserParent = userRepository.findByEmail(studentRequestDto.getParentEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("AppUser not found with Email: " + studentRequestDto.getParentEmail()));
 
         // Role check
-//        if (deleteAppUserParent.getRole() != Role.PARENT || deleteAppUserParent.getRole() != Role.ADMIN) {
+//        if (appUserParent.getRole() != Role.PARENT || appUserParent.getRole() != Role.ADMIN) {
 //            throw new IllegalStateException("AppUser must have role PARENT or ADMIN.");
 //        }
 
-        if (deleteAppUserParent.getRole() != Role.PARENT) {
+        if (appUserParent.getRole() != Role.PARENT) {
             throw new IllegalStateException("AppUser does not have PARENT role.");
         }
 
 
-        Parent parent = parentRepository.findByAppUser(deleteAppUserParent)
-                .orElseThrow(()->new ResourceNotFoundException("Parent details noy found"+studentRequestDto.getParentEmail()));
+        Parent parent = parentRepository.findByAppUser(appUserParent)
+                .orElseThrow(()->new ResourceNotFoundException("Parent details not found"+studentRequestDto.getParentEmail()));
+
+        ClassEntity assignedClass= classRepository.findByPublicId(studentRequestDto.getClassId()).orElseThrow(()->new ResourceNotFoundException("Class not found"));
+
+        if(assignedClass.getCapacity()<=assignedClass.getStudents().size()){
+            throw new ValidationException("Class is already full. Can not assign more students.");
+        }
 
 
         //Validating Files
@@ -94,9 +98,13 @@ public class StudentServiceImpl implements StudentService {
 
 
         log.info("Here coming");
+        Student student = StudentMapper.toStudentEntity(studentRequestDto,null);
+        UUID generatedUUIDForStudentOnly=UUID.randomUUID();
+        student.setPublicId(generatedUUIDForStudentOnly);
+
         // Store files
-        String idFilePath = fileStorageService.storeFile(idFile, "idproof");
-        String profilePicPath = fileStorageService.storeFile(profilePic, "profile");
+        String idFilePath = fileStorageService.storeFile(idFile, "idproof",generatedUUIDForStudentOnly);
+        String profilePicPath = fileStorageService.storeFile(profilePic, "profile",generatedUUIDForStudentOnly);
 
         // --- Extract file names and types from MultipartFile ---
         String idFileName = fileStorageService.getCleanFileName(idFile);
@@ -105,43 +113,47 @@ public class StudentServiceImpl implements StudentService {
         String profilePicFileName = fileStorageService.getCleanFileName(profilePic);
         String profilePicFileType = fileStorageService.getFileExtension(profilePic);
 
-        Student studentObj = StudentMapper.toStudentEntity(studentRequestDto,null);
+//        Student student = StudentMapper.toStudentEntity(studentRequestDto,null);
 
-        studentObj.getPersonInfo().setIdFileName(idFileName);
-        studentObj.getPersonInfo().setIdFileType(idFileType);
-        studentObj.getPersonInfo().setIdFilePath(idFilePath);
+        student.getPersonInfo().setIdFileName(idFileName);
+        student.getPersonInfo().setIdFileType(idFileType);
+        student.getPersonInfo().setIdFilePath(idFilePath);
 
-        studentObj.getPersonInfo().setProfilePicFileName(profilePicFileName);
-        studentObj.getPersonInfo().setProfilePicFileType(profilePicFileType);
-        studentObj.getPersonInfo().setProfilePicFilePath(profilePicPath);
+        student.getPersonInfo().setProfilePicFileName(profilePicFileName);
+        student.getPersonInfo().setProfilePicFileType(profilePicFileType);
+        student.getPersonInfo().setProfilePicFilePath(profilePicPath);
 
-        studentObj.getPersonInfo().setAdminApproval(false);
+        student.getPersonInfo().setAdminApproval(false);
 
-        studentObj.setParent(parent);
-        parent.getStudents().add(studentObj);
-        parentRepository.save(parent);
-        Student saved=studentRepository.save(studentObj);
+        // Step 8: Set relationships using helpers
+//        student.setClassEntity(assignedClass);
+//        student.setParent(parent);
+
+        parent.addStudent(student);               // Bidirectional link
+        assignedClass.addStudent(student);
+        Student saved=studentRepository.save(student);
 
         return StudentMapper.toStudentDto(saved);
     }
 
     @Override
+    @Transactional
     public StudentResponseDto updateStudent(UUID id, StudentRequestDto studentRequestDto, MultipartFile idFile, MultipartFile profilePic) {
         Student student = studentRepository.findByPublicId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student does not found"));
 
-        AppUser deleteAppUserParent = userRepository.findByEmail(studentRequestDto.getParentEmail())
+        AppUser appUserParent = userRepository.findByEmail(studentRequestDto.getParentEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("AppUser not found with Email: " + studentRequestDto.getParentEmail()));
 
         // Role check
-//        if (deleteAppUserParent.getRole() != Role.PARENT || deleteAppUserParent.getRole() != Role.ADMIN) {
+//        if (appUserParent.getRole() != Role.PARENT || appUserParent.getRole() != Role.ADMIN) {
 //            throw new IllegalStateException("AppUser must have role PARENT or ADMIN.");
 //        }
 
-        if (deleteAppUserParent.getRole() != Role.PARENT) {
+        if (appUserParent.getRole() != Role.PARENT) {
             throw new IllegalStateException("AppUser does not have PARENT role.");
         }
-        Parent parent = parentRepository.findByAppUser(deleteAppUserParent)
+        Parent parent = parentRepository.findByAppUser(appUserParent)
                 .orElseThrow(()->new ResourceNotFoundException("Parent does not found"));
 
         if(!Objects.equals(student.getParent(), parent)){
@@ -149,29 +161,46 @@ public class StudentServiceImpl implements StudentService {
         }
 
 
-        Student studentObj = StudentMapper.toStudentEntity(studentRequestDto,student);
+        student = StudentMapper.toStudentEntity(studentRequestDto,student);
+
+        ClassEntity newAssignedClass = classRepository.findByPublicId(studentRequestDto.getClassId()).orElseThrow(()->new ResourceNotFoundException("Class not found."));
 
         if (idFile != null && !idFile.isEmpty()) {
             FileValidator.validateFile(idFile, List.of("application/pdf", "image/jpeg", "image/png"),1024 * 1024, "ID Proof");
-            String idPath = fileStorageService.storeFile(idFile, "idproof");
+            String idPath = fileStorageService.storeFile(idFile, "idproof",student.getPublicId());
             String idFileName = fileStorageService.getCleanFileName(idFile);
             String idFileType = fileStorageService.getFileExtension(idFile);
-            studentObj.getPersonInfo().setIdFileName(idFileName);
-            studentObj.getPersonInfo().setIdFileType(idFileType);
-            studentObj.getPersonInfo().setIdFilePath(idPath);
+            student.getPersonInfo().setIdFileName(idFileName);
+            student.getPersonInfo().setIdFileType(idFileType);
+            student.getPersonInfo().setIdFilePath(idPath);
         }
 
         if (profilePic != null && !profilePic.isEmpty()) {
             FileValidator.validateFile(profilePic, List.of("image/jpeg", "image/png", "image/jpg"),1024 * 1024, "Profile Pic");
-            String profilePicPath = fileStorageService.storeFile(profilePic, "profile");
+            String profilePicPath = fileStorageService.storeFile(profilePic, "profile",student.getPublicId());
             String profilePicFileName = fileStorageService.getCleanFileName(profilePic);
             String profilePicFileType = fileStorageService.getFileExtension(profilePic);
-            studentObj.getPersonInfo().setProfilePicFileName(profilePicFileName);
-            studentObj.getPersonInfo().setProfilePicFileType(profilePicFileType);
-            studentObj.getPersonInfo().setProfilePicFilePath(profilePicPath);
+            student.getPersonInfo().setProfilePicFileName(profilePicFileName);
+            student.getPersonInfo().setProfilePicFileType(profilePicFileType);
+            student.getPersonInfo().setProfilePicFilePath(profilePicPath);
         }
 
-        Student updated=studentRepository.save(studentObj);
+
+        //To be continued from here cause now we are working on one to many helpers
+        ClassEntity oldClass = student.getClassEntity();
+        if (oldClass != null && !oldClass.getId().equals(newAssignedClass.getId())) {
+//            oldClass.getStudents().remove(student);
+//            newAssignedClass.getStudents().add(student);
+//            student.setClassEntity(newAssignedClass);
+
+            oldClass.removeStudent(student);
+            newAssignedClass.addStudent(student);
+        }
+
+
+        Student updated=studentRepository.save(student);
+
+
 
         return StudentMapper.toStudentDto(updated);
     }
@@ -181,14 +210,39 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(UUID publicId) {
         Student student =studentRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + publicId));
-        AppUser deleteAppUser=student.getAppUser();
-        if (deleteAppUser != null) {
-            student.setAppUser(null);        // unlink to avoid FK constraint issues
+        // 1. Unlink from Parent (bidirectional removal)
+        Parent parent = student.getParent();
+        if (parent != null) {
+            parent.removeStudent(student); // uses helper to maintain bidirectional consistency
         }
+
+        // 2. Unlink from ClassEntity (bidirectional removal)
+        ClassEntity classEntity = student.getClassEntity();
+        if (classEntity != null) {
+            classEntity.removeStudent(student); // uses helper
+        }
+
+        // 3. Delete associated files from storage
+        PersonInfo personInfo = student.getPersonInfo();
+        if (personInfo != null) {
+            if (personInfo.getProfilePicFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getProfilePicFilePath());
+            }
+            if (personInfo.getIdFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getIdFilePath());
+            }
+        }
+
+        // 4. Unlink and delete AppUser if exists
+        AppUser appUser = student.getAppUser();
+        if (appUser != null) {
+            student.setAppUser(null); // unlink first to prevent FK violation
+            userRepository.delete(appUser);
+
+        }
+
+        // 5. Finally delete student
         studentRepository.delete(student);
-        if (deleteAppUser != null) {
-            userRepository.delete(deleteAppUser); // delete after student is removed
-        }
 
     }
 
@@ -210,14 +264,14 @@ public class StudentServiceImpl implements StudentService {
 
                 if (student.getAppUser()==null){
                     var user = AppUser.builder()
-                            .email("NS-"+stuPersonalInfo.getName()+rollNumber)
+                            .email("NS-"+rollNumber+"@schoolname.com")
                             .password(passwordEncoder.encode(stuPersonalInfo.getSurname()+stuPersonalInfo.getBirthday()))
                             .role(Role.STUDENT) // Default role for new registrations
                             .build();
                     student.setAppUser(userRepository.save(user));
 
                     String message = "Account Details"+stuPersonalInfo.getName()+"\n"
-                                    +"Username : "+"NS-"+stuPersonalInfo.getName()+rollNumber+"\n"
+                                    +"Username : "+"NS-"+rollNumber+"@schoolname.com"+"\n"
                                     +"Password : "+stuPersonalInfo.getSurname()+stuPersonalInfo.getBirthday()
                                     +"Roll Number : "+rollNumber;
                     emailService.sendEmail(student.getParent().getAppUser().getEmail(),"Student Account Info for "+stuPersonalInfo.getName(),message);
@@ -235,12 +289,27 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + publicId));
 
-        Parent parent = student.getParent();
 
+        PersonInfo personInfo = student.getPersonInfo();
+        if (personInfo != null) {
+            if (personInfo.getProfilePicFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getProfilePicFilePath());
+            }
+            if (personInfo.getIdFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getIdFilePath());
+            }
+        }
+
+
+        Parent parent = student.getParent();
         if (parent != null) {
-            // Maintain bidirectional consistency
-            parent.getStudents().remove(student); // remove from parent's list
-            student.setParent(null);              // clear back-reference
+            parent.removeStudent(student); // uses helper to maintain bidirectional consistency
+        }
+
+        // 2. Unlink from ClassEntity (bidirectional removal)
+        ClassEntity classEntity = student.getClassEntity();
+        if (classEntity != null) {
+            classEntity.removeStudent(student); // uses helper
         }
 
         // Optional: Hibernate with orphanRemoval=true deletes the student automatically

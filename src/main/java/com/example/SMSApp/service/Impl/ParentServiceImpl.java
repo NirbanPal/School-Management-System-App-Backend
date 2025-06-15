@@ -77,8 +77,8 @@ public class ParentServiceImpl implements ParentService {
 
         log.info("Here coming");
         // Store files
-        String idFilePath = fileStorageService.storeFile(idFile, "idproof");
-        String profilePicPath = fileStorageService.storeFile(profilePic, "profile");
+        String idFilePath = fileStorageService.storeFile(idFile, "idproof",appUser.getPublicId());
+        String profilePicPath = fileStorageService.storeFile(profilePic, "profile",appUser.getPublicId());
 
         // --- Extract file names and types from MultipartFile ---
         String idFileName = fileStorageService.getCleanFileName(idFile);
@@ -116,7 +116,7 @@ public class ParentServiceImpl implements ParentService {
 
         if (idFile != null && !idFile.isEmpty()) {
             FileValidator.validateFile(idFile, List.of("application/pdf", "image/jpeg", "image/png"),1024 * 1024, "ID Proof");
-            String idPath = fileStorageService.storeFile(idFile, "idproof");
+            String idPath = fileStorageService.storeFile(idFile, "idproof",parent.getAppUser().getPublicId());
             String idFileName = fileStorageService.getCleanFileName(idFile);
             String idFileType = fileStorageService.getFileExtension(idFile);
             parentObj.getPersonInfo().setIdFileName(idFileName);
@@ -126,7 +126,7 @@ public class ParentServiceImpl implements ParentService {
 
         if (profilePic != null && !profilePic.isEmpty()) {
             FileValidator.validateFile(profilePic, List.of("image/jpeg", "image/png", "image/jpg"),1024 * 1024, "Profile Pic");
-            String profilePicPath = fileStorageService.storeFile(profilePic, "profile");
+            String profilePicPath = fileStorageService.storeFile(profilePic, "profile",parent.getAppUser().getPublicId());
             String profilePicFileName = fileStorageService.getCleanFileName(profilePic);
             String profilePicFileType = fileStorageService.getFileExtension(profilePic);
             parentObj.getPersonInfo().setProfilePicFileName(profilePicFileName);
@@ -145,7 +145,18 @@ public class ParentServiceImpl implements ParentService {
         Parent parent = parentRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Parent not found with id: " + publicId));
 
+        PersonInfo personInfo = parent.getPersonInfo();
+        if (personInfo != null) {
+            if (personInfo.getProfilePicFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getProfilePicFilePath());
+            }
+            if (personInfo.getIdFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getIdFilePath());
+            }
+        }
+
         AppUser deleteAppUser=parent.getAppUser();
+
         if (deleteAppUser != null) {
             parent.setAppUser(null);        // unlink to avoid FK constraint issues
         }
@@ -173,6 +184,17 @@ public class ParentServiceImpl implements ParentService {
 
         Parent parent = parentRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Parent not found with id: " + publicId));
+
+        PersonInfo personInfo = parent.getPersonInfo();
+        if (personInfo != null) {
+            if (personInfo.getProfilePicFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getProfilePicFilePath());
+            }
+            if (personInfo.getIdFilePath() != null) {
+                fileStorageService.deleteFile(personInfo.getIdFilePath());
+            }
+        }
+
         parentRepository.delete(parent);
     }
 }
