@@ -2,6 +2,7 @@ package com.example.SMSApp.controller;
 
 
 import com.example.SMSApp.dto.request.StudentRequestDto;
+import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.StudentResponseDto;
 import com.example.SMSApp.service.ParentService;
 import com.example.SMSApp.service.StudentService;
@@ -27,6 +28,11 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<StudentResponseDto>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
+    }
+
+    @GetMapping("/student-list")
+    public ResponseEntity<List<ShortDetailsListResponseDto>> getAllStudentList() {
+        return ResponseEntity.ok(studentService.getAllStudentList());
     }
 
     @PostMapping

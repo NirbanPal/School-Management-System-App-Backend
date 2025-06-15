@@ -1,6 +1,7 @@
 package com.example.SMSApp.controller;
 
 import com.example.SMSApp.dto.request.TeacherRequestDto;
+import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.TeacherResponseDto;
 import com.example.SMSApp.service.TeacherService;
 import jakarta.validation.Valid;
@@ -25,6 +26,11 @@ public class TeacherController {
     @GetMapping
     public ResponseEntity<List<TeacherResponseDto>> getAllTeachers() {
         return ResponseEntity.ok(teacherService.getAllTeachers());
+    }
+
+    @GetMapping("/teacher-list")
+    public ResponseEntity<List<ShortDetailsListResponseDto>> getAllTeacherList() {
+        return ResponseEntity.ok(teacherService.getAllTeacherList());
     }
 
     @PostMapping

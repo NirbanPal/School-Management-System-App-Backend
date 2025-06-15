@@ -2,6 +2,7 @@ package com.example.SMSApp.service;
 
 
 import com.example.SMSApp.dto.request.StudentRequestDto;
+import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.StudentResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface StudentService {
+
+    List<ShortDetailsListResponseDto> getAllStudentList();
 
     List<StudentResponseDto> getAllStudents();
 

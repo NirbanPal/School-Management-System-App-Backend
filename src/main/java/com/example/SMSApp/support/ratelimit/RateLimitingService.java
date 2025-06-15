@@ -3,11 +3,12 @@ package com.example.SMSApp.support.ratelimit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class RateLimitingService {
     private final RedisTemplate<String, String> redisTemplate;

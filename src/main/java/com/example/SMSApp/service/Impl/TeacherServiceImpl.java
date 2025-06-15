@@ -1,6 +1,7 @@
 package com.example.SMSApp.service.Impl;
 
 import com.example.SMSApp.dto.request.TeacherRequestDto;
+import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.TeacherResponseDto;
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import com.example.SMSApp.mapper.TeacherMapper;
@@ -43,6 +44,14 @@ public class TeacherServiceImpl implements TeacherService {
     private final CustomIdGeneratorService customIdGeneratorService;
 
     private final SubjectRepository subjectRepository;
+
+    @Override
+    public List<ShortDetailsListResponseDto> getAllTeacherList() {
+        return teacherRepository.findAll()
+                .stream()
+                .map(TeacherMapper::toShortTeacherDetails)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<TeacherResponseDto> getAllTeachers() {

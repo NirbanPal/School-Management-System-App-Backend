@@ -1,6 +1,7 @@
 package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.StudentRequestDto;
+import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.StudentResponseDto;
 import com.example.SMSApp.model.Student;
 import com.example.SMSApp.model.PersonInfo;
@@ -23,6 +24,8 @@ public class StudentMapper {
                 .birthday(info.getBirthday())
                 .rollNumber(student.getRollNumber())
                 .adminApproval(info.getAdminApproval())
+                .classId(student.getClassEntity().getPublicId())
+                .className(student.getClassEntity().getName())
                 .idFileName(info.getIdFileName())
                 .idFileType(info.getIdFileType())
                 .idFilePath(info.getIdFilePath())
@@ -54,4 +57,16 @@ public class StudentMapper {
         return student;
 
     }
+
+
+    public static ShortDetailsListResponseDto toShortStuDetails(Student stu){
+        if (stu == null || stu.getPersonInfo() == null) return null;
+
+        return ShortDetailsListResponseDto.builder()
+                .publicId(stu.getPublicId())
+                .officialId(stu.getRollNumber())
+                .name(stu.getPersonInfo().getFullName())
+                .build();
+    }
+
 }

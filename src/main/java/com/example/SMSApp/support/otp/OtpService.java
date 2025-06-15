@@ -5,6 +5,7 @@ import com.example.SMSApp.dto.OtpSessionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class OtpService {
     private final RedisTemplate<String, OtpSessionDto> otpRedisTemplate;

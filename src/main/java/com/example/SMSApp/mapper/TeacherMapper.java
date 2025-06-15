@@ -1,8 +1,10 @@
 package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.TeacherRequestDto;
+import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.TeacherResponseDto;
 import com.example.SMSApp.model.PersonInfo;
+import com.example.SMSApp.model.Teacher;
 import com.example.SMSApp.model.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -64,5 +66,16 @@ public class TeacherMapper {
 
         return teacher;
 
+    }
+
+
+    public static ShortDetailsListResponseDto toShortTeacherDetails(Teacher teacher){
+        if (teacher == null || teacher.getPersonInfo() == null) return null;
+
+        return ShortDetailsListResponseDto.builder()
+                .publicId(teacher.getPublicId())
+                .officialId(teacher.getEmpId())
+                .name(teacher.getPersonInfo().getFullName())
+                .build();
     }
 }

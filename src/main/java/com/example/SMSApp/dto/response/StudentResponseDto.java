@@ -33,8 +33,9 @@ public class StudentResponseDto {
     private String profilePicFileType;
     private String profilePicFilePath;
     private Parent parent;
-    private ClassEntity classEntity;
+    private UUID classId;
+    private String className;
     private Grade grade;
     private Attendance attendances;
-    private List<Result> results;
+//    private List<Result> results;
 }

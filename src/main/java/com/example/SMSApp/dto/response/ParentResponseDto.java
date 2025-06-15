@@ -31,5 +31,5 @@ public class ParentResponseDto {
     private String profilePicFileName;
     private String profilePicFileType;
     private String profilePicFilePath;
-    private List<Student> students;;
+//    private List<Student> students;
 }
