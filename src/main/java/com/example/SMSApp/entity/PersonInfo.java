@@ -1,6 +1,6 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.entity;
 
-import com.example.SMSApp.model.enums.UserSex;
+import com.example.SMSApp.entity.enums.UserSex;
 import jakarta.persistence.*;
 import lombok.*;
 

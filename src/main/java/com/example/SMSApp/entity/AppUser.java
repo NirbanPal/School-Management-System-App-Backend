@@ -1,14 +1,12 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.entity;
 
 
-import com.example.SMSApp.model.enums.Role;
+import com.example.SMSApp.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter

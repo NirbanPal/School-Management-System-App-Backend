@@ -4,7 +4,7 @@ import com.example.SMSApp.dto.request.SubjectRequestDto;
 import com.example.SMSApp.dto.response.SubjectLessonMinimalDto;
 import com.example.SMSApp.dto.response.SubjectResponseDto;
 import com.example.SMSApp.dto.response.SubjectTeacherMinimalDto;
-import com.example.SMSApp.model.Subject;
+import com.example.SMSApp.entity.Subject;
 
 import java.util.stream.Collectors;
 

@@ -2,8 +2,7 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.ResultRequestDto;
 import com.example.SMSApp.dto.response.ResultResponseDto;
-import com.example.SMSApp.model.PersonInfo;
-import com.example.SMSApp.model.Result;
+import com.example.SMSApp.entity.Result;
 
 public class ResultMapper {
 

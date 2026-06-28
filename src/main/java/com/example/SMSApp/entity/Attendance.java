@@ -1,9 +1,8 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity

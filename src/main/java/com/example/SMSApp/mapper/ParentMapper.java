@@ -2,8 +2,8 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.ParentRequestDto;
 import com.example.SMSApp.dto.response.ParentResponseDto;
-import com.example.SMSApp.model.Parent;
-import com.example.SMSApp.model.PersonInfo;
+import com.example.SMSApp.entity.Parent;
+import com.example.SMSApp.entity.PersonInfo;
 
 public class ParentMapper {
 

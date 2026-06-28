@@ -2,8 +2,8 @@ package com.example.SMSApp.support.subjectsync;
 
 
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
-import com.example.SMSApp.model.Subject;
-import com.example.SMSApp.model.Teacher;
+import com.example.SMSApp.entity.Subject;
+import com.example.SMSApp.entity.Teacher;
 import com.example.SMSApp.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

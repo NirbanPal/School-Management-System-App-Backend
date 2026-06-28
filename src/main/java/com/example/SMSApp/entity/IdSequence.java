@@ -1,4 +1,4 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

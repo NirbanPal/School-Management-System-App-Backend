@@ -5,7 +5,7 @@ import com.example.SMSApp.dto.response.ResultResponseDto;
 import com.example.SMSApp.exception.custom.BadRequestException;
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import com.example.SMSApp.mapper.ResultMapper;
-import com.example.SMSApp.model.*;
+import com.example.SMSApp.entity.*;
 import com.example.SMSApp.repository.*;
 
 import com.example.SMSApp.repository.ResultRepository;

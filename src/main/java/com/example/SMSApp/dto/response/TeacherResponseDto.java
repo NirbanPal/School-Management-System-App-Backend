@@ -1,6 +1,6 @@
 package com.example.SMSApp.dto.response;
 
-import com.example.SMSApp.model.enums.UserSex;
+import com.example.SMSApp.entity.enums.UserSex;
 import lombok.*;
 
 import java.time.LocalDate;

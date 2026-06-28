@@ -3,9 +3,8 @@ package com.example.SMSApp.mapper;
 import com.example.SMSApp.dto.request.StudentRequestDto;
 import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.StudentResponseDto;
-import com.example.SMSApp.model.Student;
-import com.example.SMSApp.model.PersonInfo;
-import com.example.SMSApp.model.Student;
+import com.example.SMSApp.entity.Student;
+import com.example.SMSApp.entity.PersonInfo;
 
 public class StudentMapper {
 

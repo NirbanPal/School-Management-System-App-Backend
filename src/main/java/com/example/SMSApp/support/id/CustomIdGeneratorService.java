@@ -1,11 +1,10 @@
 package com.example.SMSApp.support.id;
 
-import com.example.SMSApp.model.IdSequence;
+import com.example.SMSApp.entity.IdSequence;
 import com.example.SMSApp.repository.IdSequenceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class CustomIdGeneratorService {

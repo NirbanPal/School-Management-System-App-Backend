@@ -3,26 +3,13 @@ package com.example.SMSApp.controller;
 
 import com.example.SMSApp.dto.request.OtpRequestDto;
 import com.example.SMSApp.dto.request.OtpVerifyDto;
-import com.example.SMSApp.exception.custom.ResourceNotFoundException;
-import com.example.SMSApp.model.AppUser;
-import com.example.SMSApp.model.Student;
-import com.example.SMSApp.model.enums.Role;
-import com.example.SMSApp.repository.StudentRepository;
-import com.example.SMSApp.repository.UserRepository;
 import com.example.SMSApp.service.EmailVerificationService;
-import com.example.SMSApp.support.email.EmailService;
-import com.example.SMSApp.support.otp.OtpService;
-import com.example.SMSApp.support.ratelimit.RateLimitingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/v1/auth")

@@ -3,10 +3,8 @@ package com.example.SMSApp.mapper;
 import com.example.SMSApp.dto.request.TeacherRequestDto;
 import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.TeacherResponseDto;
-import com.example.SMSApp.model.PersonInfo;
-import com.example.SMSApp.model.Teacher;
-import com.example.SMSApp.model.Teacher;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.SMSApp.entity.PersonInfo;
+import com.example.SMSApp.entity.Teacher;
 
 
 public class TeacherMapper {

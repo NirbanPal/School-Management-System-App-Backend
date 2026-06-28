@@ -1,11 +1,8 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.entity;
 
-import com.example.SMSApp.model.enums.UserSex;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity

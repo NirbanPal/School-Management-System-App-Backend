@@ -2,7 +2,7 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.AttendanceRequestDto;
 import com.example.SMSApp.dto.response.AttendanceResponseDto;
-import com.example.SMSApp.model.Attendance;
+import com.example.SMSApp.entity.Attendance;
 
 public class AttendanceMapper {
 

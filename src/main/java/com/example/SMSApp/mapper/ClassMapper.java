@@ -2,9 +2,7 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.ClassRequestDto;
 import com.example.SMSApp.dto.response.ClassResponseDto;
-import com.example.SMSApp.model.ClassEntity;
-import com.example.SMSApp.model.Grade;
-import com.example.SMSApp.model.Teacher;
+import com.example.SMSApp.entity.ClassEntity;
 
 public class ClassMapper {
 

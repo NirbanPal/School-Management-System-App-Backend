@@ -1,7 +1,7 @@
-package com.example.SMSApp.model;
+package com.example.SMSApp.entity;
 
 
-import com.example.SMSApp.model.enums.Day;
+import com.example.SMSApp.entity.enums.Day;
 import jakarta.persistence.*;
 import lombok.*;
 

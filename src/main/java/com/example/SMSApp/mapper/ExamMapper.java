@@ -3,8 +3,8 @@ package com.example.SMSApp.mapper;
 import com.example.SMSApp.dto.request.ExamRequestDto;
 import com.example.SMSApp.dto.response.ExamResponseDto;
 import com.example.SMSApp.dto.response.ExamResultSummaryMinimalDto;
-import com.example.SMSApp.model.Exam;
-import com.example.SMSApp.model.Result;
+import com.example.SMSApp.entity.Exam;
+import com.example.SMSApp.entity.Result;
 
 import java.util.Set;
 import java.util.stream.Collectors;

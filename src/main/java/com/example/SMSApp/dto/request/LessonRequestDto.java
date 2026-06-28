@@ -1,6 +1,6 @@
 package com.example.SMSApp.dto.request;
 
-import com.example.SMSApp.model.enums.Day;
+import com.example.SMSApp.entity.enums.Day;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;

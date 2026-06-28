@@ -5,8 +5,8 @@ package com.example.SMSApp.mapper;
 import com.example.SMSApp.dto.request.AssignmentRequestDto;
 import com.example.SMSApp.dto.response.AssignmentResponseDto;
 import com.example.SMSApp.dto.response.AssignmentResultSummaryMinimalDto;
-import com.example.SMSApp.model.Assignment;
-import com.example.SMSApp.model.Result;
+import com.example.SMSApp.entity.Assignment;
+import com.example.SMSApp.entity.Result;
 
 import java.util.Set;
 import java.util.stream.Collectors;

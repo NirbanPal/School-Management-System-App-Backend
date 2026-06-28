@@ -1,6 +1,6 @@
 package com.example.SMSApp.controller;
 
-import com.example.SMSApp.model.AppUser;
+import com.example.SMSApp.entity.AppUser;
 import com.example.SMSApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

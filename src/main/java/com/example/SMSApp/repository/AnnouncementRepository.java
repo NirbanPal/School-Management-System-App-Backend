@@ -1,7 +1,6 @@
 package com.example.SMSApp.repository;
 
-import com.example.SMSApp.model.Announcement;
-import com.example.SMSApp.model.Assignment;
+import com.example.SMSApp.entity.Announcement;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

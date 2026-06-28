@@ -1,11 +1,9 @@
 package com.example.SMSApp.dto.response;
 
-import com.example.SMSApp.model.Student;
-import com.example.SMSApp.model.enums.UserSex;
+import com.example.SMSApp.entity.enums.UserSex;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 

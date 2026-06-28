@@ -3,8 +3,7 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.EventRequestDto;
 import com.example.SMSApp.dto.response.EventResponseDto;
-import com.example.SMSApp.model.ClassEntity;
-import com.example.SMSApp.model.Event;
+import com.example.SMSApp.entity.Event;
 
 public class EventMapper {
 

@@ -1,8 +1,7 @@
 package com.example.SMSApp.repository;
 
-import com.example.SMSApp.model.AppUser;
-import com.example.SMSApp.model.Parent;
-import com.example.SMSApp.model.Student;
+import com.example.SMSApp.entity.AppUser;
+import com.example.SMSApp.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

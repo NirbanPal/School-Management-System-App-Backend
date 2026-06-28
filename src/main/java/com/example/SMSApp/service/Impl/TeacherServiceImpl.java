@@ -5,11 +5,11 @@ import com.example.SMSApp.dto.response.ShortDetailsListResponseDto;
 import com.example.SMSApp.dto.response.TeacherResponseDto;
 import com.example.SMSApp.exception.custom.ResourceNotFoundException;
 import com.example.SMSApp.mapper.TeacherMapper;
-import com.example.SMSApp.model.AppUser;
-import com.example.SMSApp.model.PersonInfo;
-import com.example.SMSApp.model.Subject;
-import com.example.SMSApp.model.Teacher;
-import com.example.SMSApp.model.enums.Role;
+import com.example.SMSApp.entity.AppUser;
+import com.example.SMSApp.entity.PersonInfo;
+import com.example.SMSApp.entity.Subject;
+import com.example.SMSApp.entity.Teacher;
+import com.example.SMSApp.entity.enums.Role;
 import com.example.SMSApp.repository.SubjectRepository;
 import com.example.SMSApp.repository.TeacherRepository;
 import com.example.SMSApp.repository.UserRepository;
@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

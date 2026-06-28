@@ -2,9 +2,7 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.LessonRequestDto;
 import com.example.SMSApp.dto.response.LessonResponseDto;
-import com.example.SMSApp.model.Lesson;
-
-import java.util.stream.Collectors;
+import com.example.SMSApp.entity.Lesson;
 
 public class LessonMapper {
 

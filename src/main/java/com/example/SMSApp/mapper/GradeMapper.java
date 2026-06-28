@@ -2,11 +2,8 @@ package com.example.SMSApp.mapper;
 
 import com.example.SMSApp.dto.request.GradeRequestDto;
 import com.example.SMSApp.dto.response.GradeResponseDto;
-import com.example.SMSApp.model.ClassEntity;
-import com.example.SMSApp.model.Grade;
-import com.example.SMSApp.model.PersonInfo;
-
-import java.util.stream.Collectors;
+import com.example.SMSApp.entity.ClassEntity;
+import com.example.SMSApp.entity.Grade;
 
 public class GradeMapper {
 

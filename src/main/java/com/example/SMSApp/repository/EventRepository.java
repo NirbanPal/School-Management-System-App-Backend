@@ -1,6 +1,6 @@
 package com.example.SMSApp.repository;
 
-import com.example.SMSApp.model.Event;
+import com.example.SMSApp.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

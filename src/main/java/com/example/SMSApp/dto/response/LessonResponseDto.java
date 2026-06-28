@@ -1,7 +1,7 @@
 package com.example.SMSApp.dto.response;
 
 
-import com.example.SMSApp.model.enums.Day;
+import com.example.SMSApp.entity.enums.Day;
 import lombok.*;
 
 import java.time.LocalDateTime;
